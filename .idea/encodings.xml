@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view/BottomShareDialogView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view/BottomSheetDialogView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view/BottomSheetShareDialogView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/animator" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/animated_cpu.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/vector_drawable_cpu.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/vector_drawable_cpu_ani.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_dialog.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_dialog_recycler_view.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_share_dialog_recycler_view.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/list_item.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/values-night" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/values-v21" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/values-v21/themes.xml" charset="GBK" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
