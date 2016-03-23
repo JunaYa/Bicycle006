@@ -6,6 +6,7 @@
         <item name = "colorPrimary">@color/colorPrimary</item>
         <item name = "colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name = "colorAccent">@color/colorAccent</item>
+
     </style>
 
     <style name = "AppTheme.NoActionBar">
@@ -17,4 +18,13 @@
 
     <style name = "AppTheme.PopupOverlay" parent = "ThemeOverlay.AppCompat.Light" />
 
+    <style name = "TabLayoutStyle" parent = "Widget.Design.TabLayout">
+        <item name = "tabIndicatorColor">@color/colorAccent</item>
+        <item name = "android:background">@drawable/tab_status</item>
+        <item name = "tabTextAppearance">@style/MyCustomTextAppearance</item>
+    </style>
+
+    <style name = "MyCustomTextAppearance" parent = "TextAppearance.Design.Tab">
+        <item name = "textAllCaps">false</item>
+    </style>
 </resources>

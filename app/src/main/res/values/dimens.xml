@@ -4,4 +4,15 @@
     <dimen name = "activity_vertical_margin">16dp</dimen>
     <dimen name = "fab_margin">16dp</dimen>
     <dimen name = "text_16sp">16sp</dimen>
+    <dimen name = "material_16sp">16sp</dimen>
+    <dimen name = "card_margin">4dp</dimen>
+    <dimen name = "card_elevation_2dp">2dp</dimen>
+
+    <dimen name="app_bar_height">256dp</dimen>
+    <dimen name="nav_header_height">192dp</dimen>
+
+    <dimen name="expanded_toolbar_title_margin_start">64dp</dimen>
+
+    <dimen name="nav_header_text_margin_left">16dp</dimen>
+    <dimen name = "material_8dp">8dp</dimen>
 </resources>
