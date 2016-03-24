@@ -11,15 +11,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.aya.bicycle006.App;
 import com.aya.bicycle006.R;
+import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.BILILIFilmAdapter;
 import com.aya.bicycle006.component.RetrofitSingleton;
+import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
 import com.aya.bicycle006.listeners.HideScrollListener;
 import com.aya.bicycle006.model.BILILIFilm;
 import com.aya.bicycle006.ui.base_activity.BaseFragment;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,25 +42,31 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     private Observer<List<BILILIFilm>> mBILILIFilmObserver;
     private BILILIFilmAdapter mAdapter;
     private Context mContext;
+    private LinearLayoutManager linearLayoutManager;
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
+    private App mApp;
 
     private List<BILILIFilm> mBILILIFilms = new ArrayList<>();
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
-    public static MangaFragment newInstance() {
-        MangaFragment mangaFragment = new MangaFragment();
-        return mangaFragment;
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        mApp = App.getApp();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.common_recycler_view, container, false);
@@ -68,18 +79,25 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
         return rootView;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
+    }
+
     private void initRecyclerView() {
         mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         mRefreshLayout.setOnRefreshListener(this);
         mAdapter = new BILILIFilmAdapter(mContext, mBILILIFilms);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        linearLayoutManager.setSmoothScrollbarEnabled(true);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager = RecyclerViewUtils.LManager(mContext);
+        staggeredGridLayoutManager = RecyclerViewUtils.SManager(2);
 
-        final StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        if (mApp.isList) {
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        } else {
+            mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        }
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.addOnScrollListener(new HideScrollListener() {
@@ -97,7 +115,7 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-
+        onLoadMangaByNet(mBILILIFilmObserver);
     }
 
     private void onLoadManga() {
@@ -132,5 +150,16 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
                          }).map(bililiFilmApi1 -> {
             return bililiFilmApi1.getRank().getList();
         }).subscribe(observer);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChangeShowEvent(ChangeShow changeShow) {
+        boolean isList = changeShow.isList();
+        if (isList) {
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        } else {
+            mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        }
+        mAdapter.notifyDataSetChanged();
     }
 }

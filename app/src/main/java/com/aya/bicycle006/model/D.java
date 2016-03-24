@@ -160,7 +160,7 @@ public class D {
 
     public static class RatingEntity {
         private int max;
-        private double average;
+        private float average;
         private String stars;
         private int min;
 
@@ -172,11 +172,11 @@ public class D {
             this.max = max;
         }
 
-        public double getAverage() {
+        public float getAverage() {
             return average;
         }
 
-        public void setAverage(double average) {
+        public void setAverage(float average) {
             this.average = average;
         }
 

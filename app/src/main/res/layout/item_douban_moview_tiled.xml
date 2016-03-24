@@ -17,7 +17,7 @@
             android:layout_width = "match_parent"
             android:layout_height = "wrap_content"
             android:gravity="center_vertical"
-            android:orientation = "horizontal">
+            android:orientation = "vertical">
 
 
             <ImageView
@@ -50,6 +50,8 @@
                     android:layout_width = "match_parent"
                     android:layout_height = "wrap_content"
                     android:text = "La vita è bella"
+                    android:ellipsize = "end"
+                    android:singleLine = "true"
                     android:layout_marginTop="4dp"
                     android:textColor = "@color/text_second_color_primary"
                     android:textSize = "16sp" />
@@ -94,6 +96,8 @@
                     android:layout_height = "wrap_content"
                     android:textSize="14sp"
                     android:text="导演:罗伯托·贝尼尼 "
+                    android:ellipsize = "end"
+                    android:singleLine = "true"
                     android:layout_marginTop = "4dp" />
             </LinearLayout>
         </LinearLayout>

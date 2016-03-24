@@ -37,7 +37,7 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return tabTitles.length;
+        return mFragments!=null?mFragments.size():0;
     }
 
     @Override

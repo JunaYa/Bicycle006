@@ -28,12 +28,17 @@ public class App extends Application {
 
     }
 
-    public static App getApp(){
+    public static App getApp() {
         return app;
     }
 
-    public RefWatcher getRefWatcher(){
+    public RefWatcher getRefWatcher() {
         return App.getApp().mRefWatcher;
     }
+
+    /**
+     * 列表显示方式
+     */
+    public static boolean isList = true;
 
 }

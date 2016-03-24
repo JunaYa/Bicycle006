@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,10 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.aya.bicycle006.R;
+import com.aya.bicycle006.Utils.Const;
+import com.aya.bicycle006.Utils.PreferencesUtils;
 import com.aya.bicycle006.adapter.SimpleFragmentPagerAdapter;
+import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
 import com.aya.bicycle006.component.api.NewsApi;
 import com.aya.bicycle006.ui.base_activity.BaseActivity;
@@ -61,8 +65,9 @@ public class NewsActivity extends BaseActivity {
 
         EventBus.getDefault().register(this);
 
-
         initFragment();
+
+        Log.d("aya-----", "activity----onCreate");
     }
 
     private void initFragment() {
@@ -71,14 +76,15 @@ public class NewsActivity extends BaseActivity {
         mFragments.add(mangaFragment);
         DouBanMovieFragment douBanMovieFragment = new DouBanMovieFragment();
         mFragments.add(douBanMovieFragment);
-        int count = NewsApi.road.length ;
+        int count = NewsApi.road.length;
         for (int i = 0; i < count; i++) {
             Bundle bundle = new Bundle();
-            bundle.putString("news",NewsApi.road[i]);
+            bundle.putString("news", NewsApi.road[i]);
             NewsFragment itemFragment = NewsFragment.newInstance();
             itemFragment.setArguments(bundle);
             mFragments.add(itemFragment);
         }
+
 
 
         pagerAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), this, mFragments);
@@ -91,12 +97,14 @@ public class NewsActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("position", mTabLayout.getSelectedTabPosition());
+        Log.d("aya-----", "activity----onSaveInstanceState");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mViewPager.setCurrentItem(savedInstanceState.getInt("position"));
+        Log.d("aya-----", "activity----onRestoreInstanceState");
     }
 
     @Override
@@ -116,7 +124,15 @@ public class NewsActivity extends BaseActivity {
             case R.id.action_about:
                 startActivity(new Intent(this, MangaActivity.class));
                 break;
-            case R.id.action_day_night_no:
+            case R.id.ChangeShow:
+                boolean isList = mApp.isList;
+                if (isList) {
+                    mApp.isList = false;
+                    EventBus.getDefault().post(new ChangeShow(false));
+                } else {
+                    mApp.isList = false;
+                    EventBus.getDefault().post(new ChangeShow(true));
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -153,8 +169,27 @@ public class NewsActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("aya-----", "activity----onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("aya-----", "activity----onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("aya-----", "activity----onPause");
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        Log.d("aya-----", "activity----onDestroy");
     }
 }

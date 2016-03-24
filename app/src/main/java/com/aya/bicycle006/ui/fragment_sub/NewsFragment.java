@@ -8,15 +8,22 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.aya.bicycle006.App;
 import com.aya.bicycle006.R;
+import com.aya.bicycle006.Utils.Const;
+import com.aya.bicycle006.Utils.PreferencesUtils;
+import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.NewsAdapter;
 import com.aya.bicycle006.component.NewsRetrofit;
 import com.aya.bicycle006.component.RetrofitSingleton;
+import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
 import com.aya.bicycle006.listeners.HideScrollListener;
 import com.aya.bicycle006.model.N;
@@ -26,6 +33,8 @@ import com.aya.bicycle006.ui.view.DividerItemDecoration;
 import com.aya.bicycle006.ui.view.InsertDecoration;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +59,14 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private List<News> mNewses = new ArrayList<>();
     private Context mContext;
 
+    private LinearLayoutManager linearLayoutManager;
+    private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private Observer<N> mNewsObserver;
 
     public static String mNewsWhich;
     private static int size;
 
+    private App mApp;
     @Bind(R.id.coordinator) CoordinatorLayout mCoordinatorLayout;
     @Bind(R.id.swipe_refresh)
     SwipeRefreshLayout mRefreshLayout;
@@ -70,17 +82,20 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
+        mApp = App.getApp();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mNewsWhich = getArguments().getString("news");
+        Log.d("which",mNewsWhich);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         if (rootView == null) {
             rootView = inflater.inflate(R.layout.common_recycler_view, container, false);
@@ -97,11 +112,15 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private void initRecyclerView() {
         mAdapter = new NewsAdapter(mContext, mNewses);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager = new LinearLayoutManager(mContext);
         linearLayoutManager.setSmoothScrollbarEnabled(true);
-
-        mRecyclerView.setLayoutManager(linearLayoutManager);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        if (mApp.isList) {
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        } else {
+            mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        }
         mRecyclerView.setHasFixedSize(true);
 //        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext,DividerItemDecoration.VERTICAL_LIST));
         mRecyclerView.setAdapter(mAdapter);
@@ -115,13 +134,23 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                     loadData(mNewsObserver);
                     Snackbar.make(mCoordinatorLayout, "加载更多,~( ´•︵•` )~", Snackbar.LENGTH_LONG)
                             .show();
+
                 }
+                Log.d("bicycle---", lastVisibleItem + "----" + mAdapter.getItemCount());
             }
 
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                if (mApp.isList) {
+                    lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                } else {
+                    int[] lastPositions = new int[staggeredGridLayoutManager.getSpanCount()];
+                    staggeredGridLayoutManager.findLastVisibleItemPositions(lastPositions);
+                    lastVisibleItem = RecyclerViewUtils.findMax(lastPositions);
+                    Log.d("bicycle---", lastVisibleItem + "----" + mAdapter.getItemCount());
+                }
+
                 if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
                     EventBus.getDefault().post(new FabStatus(false));
                     controlsVisible = false;
@@ -171,7 +200,6 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
             return newses1;
         }).doOnNext(news2 -> {
         }).subscribe(observer);
-
     }
 
     private void load() {
@@ -222,5 +250,22 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
         loadData(mNewsObserver);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChangeShowEvent(ChangeShow changeShow) {
+        boolean isList = changeShow.isList();
+        if (isList) {
+            mRecyclerView.setLayoutManager(linearLayoutManager);
+        } else {
+            mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

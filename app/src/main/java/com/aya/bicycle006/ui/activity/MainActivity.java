@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aya.bicycle006.R;
+import com.aya.bicycle006.ui.base_activity.BaseActivity;
 import com.aya.bicycle006.ui.view.BottomShareDialogView;
 import com.aya.bicycle006.ui.view.BottomSheetDialogView;
 import com.aya.bicycle006.ui.view.BottomSheetShareDialogView;
@@ -24,7 +25,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @Bind(R.id.fab)
     FloatingActionButton mFAB;
     @Bind(R.id.toolbar)
@@ -39,11 +40,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
         setSupportActionBar(mToolbar);
 
+    }
 
+    @Override
+    protected int getLayoutView() {
+        return R.layout.activity_main;
     }
 
     @Override
@@ -103,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             recreate();
             return true;
-        } else if (id == R.id.action_day_night_no) {
+        } else if (id == R.id.ChangeShow) {
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             recreate();
             return true;

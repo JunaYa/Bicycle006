@@ -12,9 +12,11 @@ import butterknife.ButterKnife;
  * Created by Single on 2016/3/19.
  */
 public abstract  class BaseActivity extends AppCompatActivity {
+    protected  App mApp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mApp = App.getApp();
         setContentView(getLayoutView());
         ButterKnife.bind(this);
     }

@@ -6,4 +6,6 @@
 
     <color name="text_color_primary">#212121</color>
     <color name="text_second_color_primary">#727272</color>
+    <color name = "text_origin_primary">#ca9205</color>
+    <color name = "text_green_primary">#03af1d</color>
 </resources>
