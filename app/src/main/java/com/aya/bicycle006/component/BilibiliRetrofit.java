@@ -1,6 +1,8 @@
 package com.aya.bicycle006.component;
 
+import com.aya.bicycle006.component.api.BililiService;
 import com.aya.bicycle006.component.api.NewsService;
+import com.aya.bicycle006.model.BILILIFilmApi;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -10,30 +12,26 @@ import retrofit.Retrofit;
 import retrofit.RxJavaCallAdapterFactory;
 
 /**
- * Created by Single on 2016/3/23.
+ * Created by Single on 2016/3/25.
  */
-public class NewsRetrofit {
-
-//    public static String Base_Url = "http://c.3g.163.com/nc/article/list/T1348649580692/0-20.html";
-    public static String Base_Url = "http://c.3g.163.com/nc/article/list/";
-
+public class BilibiliRetrofit {
     private static Retrofit mRetrofit;
-    private static NewsService mNewsApi;
+    private static BililiService bililiService;
 
     public static void init() {
         Executor executor = Executors.newCachedThreadPool();
         mRetrofit = new Retrofit.Builder()
+                .baseUrl(BililiService.BASE_URL)
                 .callbackExecutor(executor)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .baseUrl(Base_Url)
                 .build();
-        mNewsApi = mRetrofit.create(NewsService.class);
+        bililiService = mRetrofit.create(BililiService.class);
     }
 
-    public static NewsService getApiService() {
-        if (mNewsApi != null) return mNewsApi;
+    public static BililiService getBililiService() {
+        if (bililiService != null) return bililiService;
         init();
-        return getApiService();
+        return getBililiService();
     }
 }

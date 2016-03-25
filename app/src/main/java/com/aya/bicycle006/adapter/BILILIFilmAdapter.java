@@ -44,7 +44,6 @@ public class BILILIFilmAdapter extends RecyclerView.Adapter<BILILIFilmAdapter.Vi
         holder.title.setText(bililiFilm.getTitle());
         Glide.with(mContext)
                 .load(bililiFilm.getPic())
-                .dontAnimate()
                 .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.pic);

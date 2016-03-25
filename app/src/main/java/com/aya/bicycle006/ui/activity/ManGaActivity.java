@@ -80,7 +80,7 @@ public class MangaActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     private void onLoadMangaByNet(Observer<List<BILILIFilm>> observer) {
-        RetrofitSingleton.getApiService()
+        RetrofitSingleton.getBililiApi()
                 .mBILILIFilmApi()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

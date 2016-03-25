@@ -12,19 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.aya.bicycle006.R;
-import com.aya.bicycle006.Utils.Const;
-import com.aya.bicycle006.Utils.PreferencesUtils;
 import com.aya.bicycle006.adapter.SimpleFragmentPagerAdapter;
 import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
-import com.aya.bicycle006.component.api.NewsApi;
+import com.aya.bicycle006.component.api.NewsService;
 import com.aya.bicycle006.ui.base_activity.BaseActivity;
 import com.aya.bicycle006.ui.fragment_sub.DouBanMovieFragment;
+import com.aya.bicycle006.ui.fragment_sub.GankFragment;
 import com.aya.bicycle006.ui.fragment_sub.MangaFragment;
 import com.aya.bicycle006.ui.fragment_sub.NewsFragment;
 
@@ -74,12 +72,14 @@ public class NewsActivity extends BaseActivity {
         mFragments = new ArrayList<>();
         MangaFragment mangaFragment = new MangaFragment();
         mFragments.add(mangaFragment);
+        GankFragment gankFragment = new GankFragment();
+        mFragments.add(gankFragment);
         DouBanMovieFragment douBanMovieFragment = new DouBanMovieFragment();
         mFragments.add(douBanMovieFragment);
-        int count = NewsApi.road.length;
+        int count = NewsService.road.length;
         for (int i = 0; i < count; i++) {
             Bundle bundle = new Bundle();
-            bundle.putString("news", NewsApi.road[i]);
+            bundle.putString("news", NewsService.road[i]);
             NewsFragment itemFragment = NewsFragment.newInstance();
             itemFragment.setArguments(bundle);
             mFragments.add(itemFragment);
@@ -159,12 +159,8 @@ public class NewsActivity extends BaseActivity {
     @OnClick(R.id.fab)
     void onFabClick() {
         Snackbar.make(mCoordinatorLayout, "this-snakebar", Snackbar.LENGTH_LONG)
-                .setAction("Undo", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                })
+                .setAction("Undo", v-> Log.d("aya-----", "activity----lambda")
+                )
                 .show();
     }
 

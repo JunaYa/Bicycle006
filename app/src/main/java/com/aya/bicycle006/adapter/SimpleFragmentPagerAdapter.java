@@ -18,7 +18,7 @@ import java.util.Arrays;
  * Created by Single on 2016/3/21.
  */
 public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
-    private String tabTitles[] = new String[]{"Manga","Top250","科技","数码","移动互联","云课堂","读书","手机"};
+    private String tabTitles[] = new String[]{"Manga","gank","Top250","科技","数码","移动互联","云课堂","读书","手机"};
 
     private Context context;
     private ArrayList<Fragment> mFragments;

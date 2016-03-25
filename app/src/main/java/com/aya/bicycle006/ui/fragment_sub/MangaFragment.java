@@ -15,6 +15,7 @@ import com.aya.bicycle006.App;
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.BILILIFilmAdapter;
+import com.aya.bicycle006.component.BilibiliRetrofit;
 import com.aya.bicycle006.component.RetrofitSingleton;
 import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
@@ -41,48 +42,31 @@ import rx.schedulers.Schedulers;
 public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
     private Observer<List<BILILIFilm>> mBILILIFilmObserver;
     private BILILIFilmAdapter mAdapter;
-    private Context mContext;
     private LinearLayoutManager linearLayoutManager;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
-    private App mApp;
 
     private List<BILILIFilm> mBILILIFilms = new ArrayList<>();
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
-        mApp = App.getApp();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.common_recycler_view, container, false);
+            rootView = inflater.inflate(getLayoutView(), container, false);
         }
-
         ButterKnife.bind(this, rootView);
         initRecyclerView();
-
         onLoadManga();
         return rootView;
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        EventBus.getDefault().unregister(this);
+    protected int getLayoutView() {
+        return R.layout.common_recycler_view;
     }
 
     private void initRecyclerView() {
@@ -141,7 +125,7 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void onLoadMangaByNet(Observer<List<BILILIFilm>> observer) {
-        RetrofitSingleton.getApiService()
+        BilibiliRetrofit.getBililiService()
                          .mBILILIFilmApi()
                          .subscribeOn(Schedulers.io())
                          .observeOn(AndroidSchedulers.mainThread())
@@ -160,6 +144,5 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
         } else {
             mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         }
-        mAdapter.notifyDataSetChanged();
     }
 }

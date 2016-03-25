@@ -17,20 +17,15 @@ import android.view.ViewGroup;
 
 import com.aya.bicycle006.App;
 import com.aya.bicycle006.R;
-import com.aya.bicycle006.Utils.Const;
-import com.aya.bicycle006.Utils.PreferencesUtils;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.NewsAdapter;
 import com.aya.bicycle006.component.NewsRetrofit;
 import com.aya.bicycle006.component.RetrofitSingleton;
 import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
-import com.aya.bicycle006.listeners.HideScrollListener;
 import com.aya.bicycle006.model.N;
 import com.aya.bicycle006.model.News;
 import com.aya.bicycle006.ui.base_activity.BaseFragment;
-import com.aya.bicycle006.ui.view.DividerItemDecoration;
-import com.aya.bicycle006.ui.view.InsertDecoration;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,19 +90,22 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         if (rootView == null) {
-            rootView = inflater.inflate(R.layout.common_recycler_view, container, false);
+            rootView = inflater.inflate(getLayoutView(), container, false);
         }
         ButterKnife.bind(this, rootView);
-
         mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         mRefreshLayout.setOnRefreshListener(this);
 
         initRecyclerView();
         load();
         return rootView;
+    }
+
+    @Override
+    protected int getLayoutView() {
+        return R.layout.common_recycler_view;
     }
 
     private void initRecyclerView() {
@@ -171,7 +169,7 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private void loadData(Observer<N> observer) {
 
         NewsRetrofit.getApiService()
-                    .mNews(mNewsWhich, start, count)
+                    .mNewsApi(mNewsWhich, start, count)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .filter(newses -> {
@@ -260,12 +258,6 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
         } else {
             mRecyclerView.setLayoutManager(staggeredGridLayoutManager);
         }
-        mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        EventBus.getDefault().unregister(this);
-    }
 }

@@ -14,5 +14,5 @@ public interface DouBanMovieService {
     String BASE_URL = "https://api.douban.com/v2/movie/";
 
     @GET("top250")
-    Observable<DApi> getTopMovie(@Query("start") int start,@Query("count") int count);
+    Observable<DApi> mDouBanMovieSApi(@Query("start") int start, @Query("count") int count);
 }

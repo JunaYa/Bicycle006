@@ -1,8 +1,7 @@
 package com.aya.bicycle006.component;
 
-import android.content.Context;
-
 import com.aya.bicycle006.component.api.DouBanMovieService;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -17,6 +16,8 @@ import retrofit.RxJavaCallAdapterFactory;
 public class DouBanMovieRetrofit {
     private static Retrofit mRetrofit;
     private static DouBanMovieService mDouBanMovie;
+    private static OkHttpClient okHttpClient ;
+
 
     public static void init() {
         Executor executor = Executors.newCachedThreadPool();
