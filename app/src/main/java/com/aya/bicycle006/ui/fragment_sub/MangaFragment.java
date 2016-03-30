@@ -1,6 +1,5 @@
 package com.aya.bicycle006.ui.fragment_sub;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,11 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.aya.bicycle006.App;
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.BILILIFilmAdapter;
-import com.aya.bicycle006.component.BilibiliRetrofit;
 import com.aya.bicycle006.component.RetrofitSingleton;
 import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
@@ -48,7 +45,6 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     private List<BILILIFilm> mBILILIFilms = new ArrayList<>();
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
-
 
 
     @Nullable
@@ -125,15 +121,13 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     private void onLoadMangaByNet(Observer<List<BILILIFilm>> observer) {
-        BilibiliRetrofit.getBililiService()
+        RetrofitSingleton.getBRetrofitSingleton().getBililiService()
                          .mBILILIFilmApi()
                          .subscribeOn(Schedulers.io())
                          .observeOn(AndroidSchedulers.mainThread())
-                         .filter(bililiFilmApi -> {
-                             return bililiFilmApi.getRank().getCode() == 0;
-                         }).map(bililiFilmApi1 -> {
-            return bililiFilmApi1.getRank().getList();
-        }).subscribe(observer);
+                         .filter(bililiFilmApi -> bililiFilmApi.getRank().getCode() == 0)
+                         .map(bililiFilmApi1 -> bililiFilmApi1.getRank().getList()
+                         ).subscribe(observer);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

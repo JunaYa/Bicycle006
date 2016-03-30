@@ -5,6 +5,7 @@
     xmlns:app = "http://schemas.android.com/apk/res-auto"
     android:layout_width = "match_parent"
     android:layout_height = "match_parent"
+    android:fitsSystemWindows="true"
     >
 
     <!-- contentScrim 这个属性是设置折叠后Toolbar的颜色-->

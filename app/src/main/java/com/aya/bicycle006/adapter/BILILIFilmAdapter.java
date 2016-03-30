@@ -9,7 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.aya.bicycle006.R;
+import com.aya.bicycle006.listeners.OnBicycleImgClickListener;
 import com.aya.bicycle006.model.BILILIFilm;
+import com.aya.bicycle006.ui.view.RatioImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -35,31 +37,35 @@ public class BILILIFilmAdapter extends RecyclerView.Adapter<BILILIFilmAdapter.Vi
         mInflater = LayoutInflater.from(context);
     }
 
-    @Override public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(mInflater.inflate(R.layout.item_bilili_film_list, parent, false));
     }
 
-    @Override public void onBindViewHolder(ViewHolder holder, int position) {
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
         BILILIFilm bililiFilm = mBILILIFilms.get(position);
         holder.title.setText(bililiFilm.getTitle());
         Glide.with(mContext)
-                .load(bililiFilm.getPic())
-                .fitCenter()
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                .into(holder.pic);
+             .load(bililiFilm.getPic())
+             .fitCenter()
+             .diskCacheStrategy(DiskCacheStrategy.RESULT)
+             .into(holder.pic);
     }
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return mBILILIFilms != null ? mBILILIFilms.size() : 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder  {
         @Bind(R.id.title) TextView title;
         @Bind(R.id.pic) ImageView pic;
-
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+
+
     }
 }

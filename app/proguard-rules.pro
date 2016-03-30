@@ -15,3 +15,86 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+#bunterknife
+-keep class butterknife.** { *; }
+-dontwarn butterknife.internal.**
+-keep class **$$ViewBinder { *; }
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <fields>;
+}
+
+-keepclasseswithmembernames class * {
+    @butterknife.* <methods>;
+}
+
+#keep the support library
+-keep class android.support.**{*;}
+-keep interface android.support.**{*;}
+
+#For using Gson @Expose annotation
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+
+#Gson specific classes
+-keep class sun.misc.Unsafe{*;}
+-keep class com.google.gson.stream.**{*;}
+
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.string);
+}
+
+
+-keepattributes Signature
+-keep class **.R$*{*;}
+-ignorewarnings
+
+-verbose
+-keepclasseswithmembernames class *{
+    native <methods>;
+}
+
+#Remove logging calls
+-assumenosideeffects class android.util.Log{
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+
+#For RxJava
+-dontwarn org.mockito.**
+-dontwarn org.junit.**
+-dontwarn org.robolectric.**
+
+#For Retrofit
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepattributes Signature
+-keepattributes Exceptions
+-keep class sun.misc.Unsafe { *; }
+
+-dontwarn java.lang.invoke.*
+
+#For EventBus
+-keep class de.greenrobot.event.** {*;}
+-keepclassmembers class ** {
+    public void onEvent*(**);
+    void onEvent*(**);
+}
+
+# 使用注解
+-keepattributes *Annotation*,Signature
+
+# 保持混淆时类的实名及行号(——————— 调试时打开 ———————)
+-keepattributes SourceFile,LineNumberTable
+
+# 枚举需要keep see http://proguard.sourceforge.net/manual/examples.html#enumerations
+-keepclassmembers enum * {
+    **[] $VALUES;
+    public *;
+}

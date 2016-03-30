@@ -1,9 +1,8 @@
 package com.aya.bicycle006.component.api;
 
-import com.aya.bicycle006.model.Gank;
 import com.aya.bicycle006.model.GankApi;
+import com.aya.bicycle006.model.GankData;
 
-import java.util.List;
 
 import retrofit.http.GET;
 import retrofit.http.Path;
@@ -17,4 +16,7 @@ public interface GankService {
 
     @GET("data/福利/{number}/{page}")
     Observable<GankApi> mGankApi(@Path("number") int number, @Path("page") int page);
+
+    @GET("day/{date}")
+    Observable<GankData> mGankDataApi(@Path("date") String date);
 }

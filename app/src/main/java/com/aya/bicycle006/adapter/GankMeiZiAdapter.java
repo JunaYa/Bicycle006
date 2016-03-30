@@ -4,11 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.listeners.OnBicycleImgClickListener;
+import com.aya.bicycle006.listeners.OnBicycleItemLongClickListener;
 import com.aya.bicycle006.model.Gank;
+import com.aya.bicycle006.ui.view.RatioImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -20,13 +21,16 @@ import butterknife.ButterKnife;
 /**
  * Created by Single on 2016/3/25.
  */
-public class GankAdapter extends RecyclerView.Adapter {
+public class GankMeiZiAdapter extends RecyclerView.Adapter {
     private List<Gank> mGanks;
-    private boolean isList = true;
     private OnBicycleImgClickListener mOnBicycleImgClickListener;
-
+    private OnBicycleItemLongClickListener mOnBicycleItemLongClickListener;
     public void setOnBicycleImgClickListener(OnBicycleImgClickListener onBicycleImgClickListener) {
         mOnBicycleImgClickListener = onBicycleImgClickListener;
+    }
+
+    public void setOnBicycleItemLongClickListener(OnBicycleItemLongClickListener onBicycleItemLongClickListener) {
+        mOnBicycleItemLongClickListener = onBicycleItemLongClickListener;
     }
 
     @Override
@@ -48,12 +52,17 @@ public class GankAdapter extends RecyclerView.Adapter {
              .skipMemoryCache(false)
              .into(gankViewHolder.img);
         if (mOnBicycleImgClickListener != null) {
-            gankViewHolder.img.setOnClickListener(v -> {
-                        mOnBicycleImgClickListener.onClick(v, gank);
-                    }
+            gankViewHolder.itemView.setOnClickListener(v ->
+                            mOnBicycleImgClickListener.onClick(v, gank)
             );
-        }
 
+        }
+        if (mOnBicycleItemLongClickListener != null){
+            gankViewHolder.itemView.setOnLongClickListener(v -> {
+                mOnBicycleItemLongClickListener.onLongClick(v,gank);
+                return true;
+            });
+        }
     }
 
     @Override
@@ -63,7 +72,7 @@ public class GankAdapter extends RecyclerView.Adapter {
 
     static class GankViewHolder extends RecyclerView.ViewHolder {
 
-        @Bind(R.id.img) ImageView img;
+        @Bind(R.id.img) RatioImageView img;
 
         public GankViewHolder(View itemView) {
             super(itemView);
@@ -76,10 +85,6 @@ public class GankAdapter extends RecyclerView.Adapter {
     public void setGanks(List<Gank> ganks) {
         mGanks = ganks;
         notifyDataSetChanged();
-    }
-
-    public void setIsList(boolean isList) {
-        this.isList = isList;
     }
 
 

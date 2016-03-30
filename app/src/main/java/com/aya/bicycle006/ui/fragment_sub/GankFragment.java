@@ -15,15 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.aya.bicycle006.R;
+import com.aya.bicycle006.Utils.DateUtils;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.Utils.Save;
-import com.aya.bicycle006.adapter.GankAdapter;
+import com.aya.bicycle006.Utils.ShareUtils;
+import com.aya.bicycle006.Utils.SnackBarUtils;
+import com.aya.bicycle006.adapter.GankMeiZiAdapter;
 import com.aya.bicycle006.component.GankRetrofit;
+import com.aya.bicycle006.component.RetrofitSingleton;
 import com.aya.bicycle006.events.ChangeShow;
 import com.aya.bicycle006.events.FabStatus;
 import com.aya.bicycle006.listeners.OnBicycleImgClickListener;
+import com.aya.bicycle006.listeners.OnBicycleItemLongClickListener;
 import com.aya.bicycle006.model.Gank;
 import com.aya.bicycle006.model.GankApi;
+import com.aya.bicycle006.ui.activity.GankItemActivity;
 import com.aya.bicycle006.ui.base_activity.BaseFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,6 +37,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -60,9 +67,10 @@ public class GankFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     private LinearLayoutManager mLinearLayoutManager;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
 
-    private GankAdapter mAdapter;
+    private GankMeiZiAdapter mAdapter;
 
     private CompositeSubscription mCompositeSubscription;
+
 
     @Nullable
     @Override
@@ -81,11 +89,9 @@ public class GankFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private void initRecyclerView() {
-        mAdapter = new GankAdapter();
-        mAdapter.setOnBicycleImgClickListener((view, gank) -> {
-            Snackbar.make(mCoordinatorLayout,"click",Snackbar.LENGTH_LONG).show();
-            saveIamge(gank.getUrl(), gank.getWho());
-        });
+        mAdapter = new GankMeiZiAdapter();
+        mAdapter.setOnBicycleImgClickListener(mOnBicycleImgClickListener);
+        mAdapter.setOnBicycleItemLongClickListener(mOnBicycleItemLongClickListener);
         mLinearLayoutManager = RecyclerViewUtils.LManager(mContext);
         mStaggeredGridLayoutManager = RecyclerViewUtils.SManager(2);
         if (mApp.isList) {
@@ -137,21 +143,41 @@ public class GankFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     }
 
-    private void saveIamge(String url,String title){
-        Subscription subscription = Save.saveImage(getActivity(),url,title)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(uri -> {
-                    File appDir = new File(Environment.getExternalStorageDirectory(),"bicycle");
-                    String msg = String.format("bicycle",appDir.getAbsolutePath());
-                });
+    private void saveIamge(String url, String title) {
+        Subscription subscription = Save.saveImage(getActivity(), url, title)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(uri -> {
+                                            File appDir = new File(Environment.getExternalStorageDirectory(), "bicycle");
+                                            String msg = String.format("bicycle", appDir.getAbsolutePath());
+                                            Log.d("save", "msg" + msg);
+//                                            Save.showNotificationSaveOK(uri,mContext);
+                                        });
         addSunscribe(subscription);
     }
-    private void addSunscribe(Subscription s){
-        if (mCompositeSubscription == null){
+
+    private void addSunscribe(Subscription s) {
+        if (mCompositeSubscription == null) {
             mCompositeSubscription = new CompositeSubscription();
         }
         mCompositeSubscription.add(s);
     }
+
+    private OnBicycleImgClickListener mOnBicycleImgClickListener
+            = (view, gank) -> saveIamge(gank.getUrl(), gank.getPublishedAt());
+
+    private OnBicycleItemLongClickListener mOnBicycleItemLongClickListener = new OnBicycleItemLongClickListener() {
+        @Override
+        public void onLongClick(View view, Gank gank) {
+            SnackBarUtils.SnakeShort(mCoordinatorLayout, "cardClick");
+
+            String date = gank.getPublishedAt();
+            Date dd = DateUtils.parseApiDateTZ(date);
+            String dateStr = DateUtils.formatApiDateS(dd);
+            startActivity(GankItemActivity.newGankIntent(mContext, dateStr));
+        }
+    };
+
+
     @Override
     protected int getLayoutView() {
         return R.layout.common_recycler_view;
@@ -170,8 +196,6 @@ public class GankFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
             @Override
             public void onNext(GankApi ganks) {
-                Log.d("aya---", ganks.getResults().get(0).getUrl());
-                Log.d("aya---", ganks.getResults().get(0).getSource());
                 mSwipeRefreshLayout.setRefreshing(false);
                 mAdapter.setGanks(ganks.getResults());
             }
@@ -180,7 +204,7 @@ public class GankFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     private void onLoadData(Observer<GankApi> observer) {
-        GankRetrofit.getGankService()
+        RetrofitSingleton.getGRetrofitSingleton().getGankService()
                     .mGankApi(number, page)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -208,5 +232,8 @@ public class GankFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (this.mCompositeSubscription != null){
+            this.mCompositeSubscription.unsubscribe();
+        }
     }
 }

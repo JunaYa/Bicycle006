@@ -1,7 +1,7 @@
 package com.aya.bicycle006.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -61,11 +61,9 @@ public class NewsActivity extends BaseActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        EventBus.getDefault().register(this);
 
         initFragment();
 
-        Log.d("aya-----", "activity----onCreate");
     }
 
     private void initFragment() {
@@ -86,7 +84,6 @@ public class NewsActivity extends BaseActivity {
         }
 
 
-
         pagerAdapter = new SimpleFragmentPagerAdapter(getSupportFragmentManager(), this, mFragments);
         mViewPager.setAdapter(pagerAdapter);
         mTabLayout.setupWithViewPager(mViewPager);
@@ -97,14 +94,12 @@ public class NewsActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt("position", mTabLayout.getSelectedTabPosition());
-        Log.d("aya-----", "activity----onSaveInstanceState");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mViewPager.setCurrentItem(savedInstanceState.getInt("position"));
-        Log.d("aya-----", "activity----onRestoreInstanceState");
     }
 
     @Override
@@ -122,7 +117,7 @@ public class NewsActivity extends BaseActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_about:
-                startActivity(new Intent(this, MangaActivity.class));
+                startActivity(WebActivity.newGankWebIntent(NewsActivity.this, "http://kotlindoc.com/index.html", "kotlin"));
                 break;
             case R.id.ChangeShow:
                 boolean isList = mApp.isList;
@@ -159,7 +154,7 @@ public class NewsActivity extends BaseActivity {
     @OnClick(R.id.fab)
     void onFabClick() {
         Snackbar.make(mCoordinatorLayout, "this-snakebar", Snackbar.LENGTH_LONG)
-                .setAction("Undo", v-> Log.d("aya-----", "activity----lambda")
+                .setAction("Undo", v -> Log.d("aya-----", "activity----lambda")
                 )
                 .show();
     }
@@ -173,19 +168,27 @@ public class NewsActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d("aya-----", "activity----onResume");
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("aya-----", "activity----onPause");
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
-        Log.d("aya-----", "activity----onDestroy");
     }
+
+    private Handler mHandler;
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+        }
+    };
 }

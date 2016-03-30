@@ -1,8 +1,6 @@
 package com.aya.bicycle006.component;
 
-import com.aya.bicycle006.component.api.BililiService;
 import com.aya.bicycle006.component.api.GankService;
-import com.aya.bicycle006.component.api.NewsService;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

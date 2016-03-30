@@ -40,7 +40,7 @@ public abstract class BaseFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
+
 //        rootView = super.onCreateView(inflater, container, savedInstanceState);
 //        if (rootView == null) {
 //            rootView = inflater.inflate(getLayoutView(), container, false);
@@ -61,8 +61,22 @@ public abstract class BaseFragment extends Fragment {
     int getLayoutView();
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
     }
 }

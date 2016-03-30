@@ -11,6 +11,7 @@
         android:layout_width = "match_parent"
         android:layout_height = "wrap_content"
         app:cardElevation = "@dimen/card_elevation_2dp"
+        android:layout_margin="4dp"
         >
 
         <LinearLayout
@@ -23,7 +24,8 @@
                 android:id = "@+id/pic"
                 android:layout_width = "match_parent"
                 android:layout_height = "wrap_content"
-                android:scaleType="centerInside"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
                 />
 
             <TextView

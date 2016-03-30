@@ -1,5 +1,10 @@
 package com.aya.bicycle006.model;
 
+import android.graphics.Point;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by Single on 2016/3/25.
  */

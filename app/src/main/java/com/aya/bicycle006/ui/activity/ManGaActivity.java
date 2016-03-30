@@ -10,6 +10,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.adapter.BILILIFilmAdapter;
+import com.aya.bicycle006.component.BilibiliRetrofit;
 import com.aya.bicycle006.component.RetrofitSingleton;
 import com.aya.bicycle006.model.BILILIFilm;
 
@@ -80,15 +81,13 @@ public class MangaActivity extends AppCompatActivity implements SwipeRefreshLayo
     }
 
     private void onLoadMangaByNet(Observer<List<BILILIFilm>> observer) {
-        RetrofitSingleton.getBililiApi()
+        BilibiliRetrofit.getBililiService()
                 .mBILILIFilmApi()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .filter(bililiFilmApi -> {
-                    return bililiFilmApi.getRank().getCode() == 0;
-                }).map(bililiFilmApi1 -> {
-            return bililiFilmApi1.getRank().getList();
-        }).subscribe(observer);
+                .filter(bililiFilmApi ->bililiFilmApi.getRank().getCode() == 0
+                ).map(bililiFilmApi1 -> bililiFilmApi1.getRank().getList()
+        ).subscribe(observer);
     }
 
     @Override protected void onDestroy() {

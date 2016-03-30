@@ -168,7 +168,7 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
 
     private void loadData(Observer<N> observer) {
 
-        NewsRetrofit.getApiService()
+        RetrofitSingleton.getNRetrofitSingleton().getApiService()
                     .mNewsApi(mNewsWhich, start, count)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())

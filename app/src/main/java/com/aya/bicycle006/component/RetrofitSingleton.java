@@ -25,73 +25,45 @@ import retrofit.RxJavaCallAdapterFactory;
 public class RetrofitSingleton {
 
 
-    private static NewsService newsApi = null;
-    private static BililiService bililiApi = null;
-    private static DouBanMovieService douBanMovieApi = null;
-    private static GankService gankService = null;
+    private static final Object monitor = new Object();
 
-    private static OkHttpClient okHttpClient = new OkHttpClient();
-    private static GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create();
-    private static RxJavaCallAdapterFactory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
-    private static Executor executor = Executors.newCachedThreadPool();
+    private volatile static BilibiliRetrofit bilibiliRetrofit;
+    private volatile static GankRetrofit gankRetrofit;
+    private volatile static NewsRetrofit newsRetrofit;
 
-    private static final String TAG = RetrofitSingleton.class.getSimpleName();
-
-    public static Context context;
-
-
-    public static BililiService getBililiApi() {
-        if (bililiApi == null) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .client(okHttpClient)
-                    .callbackExecutor(executor)
-                    .addCallAdapterFactory(rxJavaCallAdapterFactory)
-                    .addConverterFactory(gsonConverterFactory)
-                    .build();
-            bililiApi = retrofit.create(BililiService.class);
+    public static BilibiliRetrofit getBRetrofitSingleton() {
+        if (bilibiliRetrofit == null) {
+            synchronized (BilibiliRetrofit.class) {
+                if (bilibiliRetrofit == null) {
+                    bilibiliRetrofit = new BilibiliRetrofit();
+                }
+            }
         }
-        return getBililiApi();
+        return bilibiliRetrofit;
     }
 
-
-    public static DouBanMovieService getDouBanMovieApi() {
-        if (douBanMovieApi != null) return douBanMovieApi;
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(DouBanMovieService.BASE_URL)
-                .callbackExecutor(executor)
-                .addCallAdapterFactory(rxJavaCallAdapterFactory)
-                .addConverterFactory(gsonConverterFactory)
-                .build();
-        douBanMovieApi = retrofit.create(DouBanMovieService.class);
-        return douBanMovieApi;
+    public static GankRetrofit getGRetrofitSingleton() {
+        if (gankRetrofit == null) {
+            synchronized (GankRetrofit.class) {
+                if (gankRetrofit == null) {
+                    gankRetrofit = new GankRetrofit();
+                }
+            }
+        }
+        return gankRetrofit;
     }
 
-    public static NewsService getNewsApi() {
-        if (newsApi != null) return newsApi;
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(NewsService.Base_Url)
-                .callbackExecutor(executor)
-                .addCallAdapterFactory(rxJavaCallAdapterFactory)
-                .addConverterFactory(gsonConverterFactory)
-                .build();
-        newsApi = retrofit.create(NewsService.class);
-        return getNewsApi();
+    public static NewsRetrofit getNRetrofitSingleton() {
+        if (newsRetrofit == null) {
+            synchronized (NewsRetrofit.class) {
+                if (newsRetrofit == null) {
+                    newsRetrofit = new NewsRetrofit();
+                }
+            }
+        }
+        return newsRetrofit;
     }
 
-    public static GankService getGankApi() {
-        if (gankService != null) return gankService;
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(okHttpClient)
-                .baseUrl(GankService.BASE_URL)
-                .callbackExecutor(executor)
-                .addCallAdapterFactory(rxJavaCallAdapterFactory)
-                .addConverterFactory(gsonConverterFactory)
-                .build();
-        gankService = retrofit.create(GankService.class);
-        return getGankApi();
-    }
 
     public static void disposeFailureInfo(Throwable t, Context context, View view) {
         if (t.toString().contains("GaiException") || t.toString()
@@ -101,7 +73,6 @@ public class RetrofitSingleton {
         } else {
             Toast.makeText(context, t.getMessage(), Toast.LENGTH_LONG).show();
         }
-        Log.w(TAG, t.toString());
     }
 
 }

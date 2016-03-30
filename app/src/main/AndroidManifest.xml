@@ -3,8 +3,9 @@
     package = "com.aya.bicycle006"
     xmlns:android = "http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name = "android.permission.INTERNET"/>
-    <uses-permission android:name = "android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name = "android.permission.INTERNET" />
+    <uses-permission android:name = "android.permission.WRITE_SETTINGS" />
+
     <application
         android:name = ".App"
         android:allowBackup = "true"
@@ -15,23 +16,45 @@
         <activity
             android:name = ".ui.activity.MainActivity"
             android:label = "@string/app_name"
-            android:theme = "@style/AppTheme.NoActionBar">
+            android:theme = "@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <!--<intent-filter>-->
-                <!--<action android:name = "android.intent.action.MAIN" />-->
+            <!--<action android:name = "android.intent.action.MAIN" />-->
 
-                <!--<category android:name = "android.intent.category.LAUNCHER" />-->
+            <!--<category android:name = "android.intent.category.LAUNCHER" />-->
             <!--</intent-filter>-->
         </activity>
-        <activity android:name = ".ui.activity.NewsActivity"
-                  android:theme = "@style/AppTheme.NoActionBar">
+        <activity
+            android:name = ".ui.activity.NewsActivity"
+            android:theme = "@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name = "android.intent.action.MAIN" />
 
                 <category android:name = "android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name = ".ui.activity.MangaActivity"
-                  android:theme = "@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name = ".ui.activity.MangaActivity"
+            android:theme = "@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name = ".ui.activity.GankItemActivity"
+            android:theme = "@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name = ".ui.activity.WebActivity"
+            android:theme = "@style/AppTheme.NoActionBar"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"/>
+
+        <meta-data
+            android:name="CHANNEL"
+            android:value="${CHANNEL_VALUE}"/>
     </application>
 
 </manifest>

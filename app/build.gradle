@@ -9,7 +9,6 @@ def packTime() {
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.aya.bicycle006"
         minSdkVersion 15
@@ -21,26 +20,49 @@ android {
         // disable limited support for vector drawables fro Android Studio 1.4
         generatedDensities = []
     }
-
     // Gradle Plugin 1.5
     // disable limited support for vector drawables fro Android Studio 1.4
     aaptOptions {
         additionalParameters "--no-version-vectors"
     }
-
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //多渠道打包
+            applicationVariants.all{variant ->
+                variant.outputs.each{output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')){
+                        def fileName = "bicycle006${defaultConfig.versionName}_${variant.productFlavors[0].name}.apk"
+                        output.outputFile = new File(outputFile.parent,fileName)
+                    }
+                }
+            }
         }
     }
-
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    productFlavors {
+        fir {
+            manifestPlaceholders(["CHANNEL_VALUE":"fir"])
+        }
+        _360 {
+            manifestPlaceholders(["CHANNEL_VALUE":"_360"])
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -71,4 +93,6 @@ dependencies {
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
+//    compile "me.henrytao:smooth-app-bar-layout:<latest-version>"
 }

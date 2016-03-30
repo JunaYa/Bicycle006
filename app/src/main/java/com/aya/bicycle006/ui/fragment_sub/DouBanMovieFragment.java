@@ -1,6 +1,5 @@
 package com.aya.bicycle006.ui.fragment_sub;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -9,12 +8,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.aya.bicycle006.App;
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.DouBanMovieAdapter;
