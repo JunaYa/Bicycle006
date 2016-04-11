@@ -4,8 +4,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.aya.bicycle006.events.FabStatus;
-import com.aya.bicycle006.events.LoadMore;
+import com.aya.bicycle006.events.FabStatusEvent;
+import com.aya.bicycle006.events.LoadMoreEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -61,14 +61,14 @@ public class HideScrollLoadMoreListener extends RecyclerView.OnScrollListener {
     }
 
     public void onHide() {
-        EventBus.getDefault().post(new FabStatus(false));
+        EventBus.getDefault().post(new FabStatusEvent(false));
     }
 
     public void onShow() {
-        EventBus.getDefault().post(new FabStatus(true));
+        EventBus.getDefault().post(new FabStatusEvent(true));
     }
 
     public void onLoadMore() {
-        EventBus.getDefault().post(new LoadMore(true));
+        EventBus.getDefault().post(new LoadMoreEvent(true));
     }
 }

@@ -1,7 +1,6 @@
 package com.aya.bicycle006.ui.activity;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,8 +16,8 @@ import android.view.animation.DecelerateInterpolator;
 
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.adapter.SimpleFragmentPagerAdapter;
-import com.aya.bicycle006.events.ChangeShow;
-import com.aya.bicycle006.events.FabStatus;
+import com.aya.bicycle006.events.ChangeShowEvent;
+import com.aya.bicycle006.events.FabStatusEvent;
 import com.aya.bicycle006.component.api.NewsService;
 import com.aya.bicycle006.ui.base_activity.BaseActivity;
 import com.aya.bicycle006.ui.fragment_sub.DouBanMovieFragment;
@@ -60,7 +59,6 @@ public class NewsActivity extends BaseActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         initFragment();
 
@@ -123,10 +121,10 @@ public class NewsActivity extends BaseActivity {
                 boolean isList = mApp.isList;
                 if (isList) {
                     mApp.isList = false;
-                    EventBus.getDefault().post(new ChangeShow(false));
+                    EventBus.getDefault().post(new ChangeShowEvent(false));
                 } else {
-                    mApp.isList = false;
-                    EventBus.getDefault().post(new ChangeShow(true));
+                    mApp.isList = true;
+                    EventBus.getDefault().post(new ChangeShowEvent(true));
                 }
                 break;
         }
@@ -134,7 +132,7 @@ public class NewsActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(FabStatus event) {
+    public void onEventMainThread(FabStatusEvent event) {
         CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams) mFab.getLayoutParams();
         final int fabBottomMargin = lp.bottomMargin;
         boolean isShow = event.getIsShow();
@@ -185,10 +183,4 @@ public class NewsActivity extends BaseActivity {
         super.onDestroy();
     }
 
-    private Handler mHandler;
-    private Runnable mRunnable = new Runnable() {
-        @Override
-        public void run() {
-        }
-    };
 }

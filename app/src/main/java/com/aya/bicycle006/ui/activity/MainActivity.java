@@ -4,12 +4,11 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.ui.base_activity.BaseActivity;
-import com.aya.bicycle006.ui.view.BottomShareDialogView;
 import com.aya.bicycle006.ui.view.BottomSheetDialogView;
 import com.aya.bicycle006.ui.view.BottomSheetShareDialogView;
 
@@ -111,7 +109,9 @@ public class MainActivity extends BaseActivity {
             getDelegate().setLocalNightMode(AppCompatDelegate.MODE_NIGHT_NO);
             recreate();
             return true;
-        } else {
+        }else if (id == R.id.action_alipay){
+
+        }else {
             if (id == R.id.action_bottom_sheet_dialog) {
                 BottomSheetDialogView.show(this, mDayNightMode);
                 return true;
@@ -120,4 +120,5 @@ public class MainActivity extends BaseActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

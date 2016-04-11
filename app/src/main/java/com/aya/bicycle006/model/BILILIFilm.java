@@ -2,10 +2,12 @@ package com.aya.bicycle006.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by Single on 2016/3/3.
  */
-public class BILILIFilm {
+public class BILILIFilm  {
 
     @SerializedName("aid") private int aid;
     @SerializedName("play") private int play;

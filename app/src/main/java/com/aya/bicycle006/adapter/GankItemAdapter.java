@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.StringStyleUtils;
+import com.aya.bicycle006.listeners.OnBicycleImgClickListener;
 import com.aya.bicycle006.model.Gank;
 import com.aya.bicycle006.ui.activity.WebActivity;
 
@@ -25,6 +26,12 @@ import butterknife.OnClick;
 public class GankItemAdapter extends RecyclerView.Adapter {
 
     private List<Gank> mGanks;
+
+    private OnBicycleImgClickListener mOnBicycleImgClickListener;
+
+    public void setOnBicycleImgClickListener(OnBicycleImgClickListener onBicycleImgClickListener) {
+        mOnBicycleImgClickListener = onBicycleImgClickListener;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -55,6 +62,12 @@ public class GankItemAdapter extends RecyclerView.Adapter {
                         , R.style.ViaTextAppearance));
         CharSequence gankText = builder.subSequence(0, builder.length());
         gankViewHolder.gank.setText(gankText);
+
+        if (mOnBicycleImgClickListener !=null){
+            gankViewHolder.itemView.setOnClickListener(v->{
+                    mOnBicycleImgClickListener.onClick(v,gank);
+            });
+        }
 
     }
 
@@ -87,11 +100,6 @@ public class GankItemAdapter extends RecyclerView.Adapter {
         public GankViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-        }
-        @OnClick(R.id.ll_gank_parent) void onGank(View v){
-            Gank gank = mGanks.get(getLayoutPosition());
-            Intent intent = WebActivity.newGankWebIntent(v.getContext(),gank.getUrl(),gank.getDesc());
-            v.getContext().startActivity(intent);
         }
     }
 }

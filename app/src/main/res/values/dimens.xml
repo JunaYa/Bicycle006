@@ -15,4 +15,14 @@
 
     <dimen name="nav_header_text_margin_left">16dp</dimen>
     <dimen name = "material_8dp">8dp</dimen>
+
+    <dimen name="floating_button_size">40dp</dimen>
+    <dimen name="floating_button_margin">16dp</dimen>
+    <dimen name="floating_button_card_radius">16dp</dimen>
+
+    <dimen name="button_elevation">2dp</dimen>
+    <dimen name="button_press_elevation">4dp</dimen>
+
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="card_corner_radius">6dp</dimen>
 </resources>

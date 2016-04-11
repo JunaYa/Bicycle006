@@ -21,6 +21,7 @@ package com.aya.bicycle006.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -36,6 +37,8 @@ import com.aya.bicycle006.R;
 import com.aya.bicycle006.ui.base_activity.BaseActivity;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 
+import java.lang.ref.WeakReference;
+
 import butterknife.Bind;
 
 /**
@@ -45,6 +48,7 @@ public class WebActivity extends BaseActivity {
     private static final String EXTRA_URL = "extra_url";
     private static final String EXTRA_TITLE = "extra_title";
 
+    private WeakReference<AppCompatActivity> mWeakReference;
     private String mUrl, mTitle;
 
     @Bind(R.id.toolbar) Toolbar mToolbar;
@@ -89,6 +93,7 @@ public class WebActivity extends BaseActivity {
         mWebView.loadUrl(mUrl);
         mTextSwitcher.setFactory(() -> {
             TextView textView = new TextView(this);
+            textView.setTextAppearance(this,R.style.WebTitle);
             textView.setSingleLine(true);
             textView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
             textView.postDelayed(() -> textView.setSelected(true), 1738);
@@ -97,6 +102,11 @@ public class WebActivity extends BaseActivity {
         mTextSwitcher.setInAnimation(this, android.R.anim.fade_in);
         mTextSwitcher.setOutAnimation(this, android.R.anim.fade_out);
         if (mTitle != null) setTitle(mTitle);
+
+        if (mWeakReference == null)
+        {
+            mWeakReference = new WeakReference<>(WebActivity.this);
+        }
     }
 
     @Override

@@ -73,7 +73,7 @@ public class MangaActivity extends AppCompatActivity implements SwipeRefreshLayo
             }
 
             @Override public void onNext(List<BILILIFilm> bililiFilms) {
-                mAdapter = new BILILIFilmAdapter(MangaActivity.this, bililiFilms);
+                mAdapter = new BILILIFilmAdapter();
                 mRecyclerView.setAdapter(mAdapter);
             }
         };

@@ -1,24 +1,35 @@
 package com.aya.bicycle006.ui.fragment_sub;
 
+import android.annotation.TargetApi;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.BILILIFilmAdapter;
 import com.aya.bicycle006.component.RetrofitSingleton;
-import com.aya.bicycle006.events.ChangeShow;
-import com.aya.bicycle006.events.FabStatus;
+import com.aya.bicycle006.events.ChangeShowEvent;
+import com.aya.bicycle006.events.FabStatusEvent;
 import com.aya.bicycle006.listeners.HideScrollListener;
+import com.aya.bicycle006.listeners.OnBicycleImgClickListener;
 import com.aya.bicycle006.model.BILILIFilm;
+import com.aya.bicycle006.ui.activity.BIliBiliDetailActivity;
 import com.aya.bicycle006.ui.base_activity.BaseFragment;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,6 +57,8 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
+    public static Bitmap bitmap;
+    private View imgView;
 
     @Nullable
     @Override
@@ -61,6 +74,13 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (imgView == null) return;
+        ViewPropertyAnimator.animate(imgView).alpha(1.0f);
+    }
+
+    @Override
     protected int getLayoutView() {
         return R.layout.common_recycler_view;
     }
@@ -68,7 +88,8 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     private void initRecyclerView() {
         mRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         mRefreshLayout.setOnRefreshListener(this);
-        mAdapter = new BILILIFilmAdapter(mContext, mBILILIFilms);
+        mAdapter = new BILILIFilmAdapter();
+        mAdapter.setOnBicycleImgClickListener(mOnBicycleImgClickListener);
 
         linearLayoutManager = RecyclerViewUtils.LManager(mContext);
         staggeredGridLayoutManager = RecyclerViewUtils.SManager(2);
@@ -83,18 +104,19 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
         mRecyclerView.addOnScrollListener(new HideScrollListener() {
             @Override
             public void onHide() {
-                EventBus.getDefault().post(new FabStatus(false));
+                EventBus.getDefault().post(new FabStatusEvent(false));
             }
 
             @Override
             public void onShow() {
-                EventBus.getDefault().post(new FabStatus(true));
+                EventBus.getDefault().post(new FabStatusEvent(true));
             }
         });
     }
 
     @Override
     public void onRefresh() {
+        mBILILIFilms.clear();
         onLoadMangaByNet(mBILILIFilmObserver);
     }
 
@@ -112,9 +134,8 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
 
             @Override
             public void onNext(List<BILILIFilm> bililiFilms) {
-                mBILILIFilms.clear();
                 mBILILIFilms.addAll(bililiFilms);
-                mAdapter.notifyDataSetChanged();
+                mAdapter.setBiliList(mBILILIFilms);
             }
         };
         onLoadMangaByNet(mBILILIFilmObserver);
@@ -130,8 +151,74 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
                          ).subscribe(observer);
     }
 
+    private void onLoadData() {
+        RetrofitSingleton.getBRetrofitSingleton().getBililiService()
+                         .mBILILIFilmApi()
+                         .map(d -> d.getRank())
+                         .single(d1 -> d1.getCode() == 0)
+                         .subscribeOn(Schedulers.io())
+                         .observeOn(AndroidSchedulers.mainThread())
+                         .subscribe(list -> {
+                             mBILILIFilms.clear();
+                             mAdapter.setBiliList(mBILILIFilms);
+                         });
+    }
+
+    private OnBicycleImgClickListener mOnBicycleImgClickListener = (view, obj) ->
+    {
+        showPhoto(view, obj);
+        imgView = view;
+    };
+
+
+    @SuppressWarnings("UnusedDeclaration")
+    private void showPhoto(View view, Object obj) {
+
+        ImageView imageView = (ImageView) view;
+        imageView.buildDrawingCache(false);
+        bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), (imageView
+                .getDrawingCache()).getConfig());
+        if (obj instanceof BILILIFilm) {
+            BILILIFilm bililiFilm = (BILILIFilm) obj;
+            Intent intent = BIliBiliDetailActivity.newBILIIntent(getActivity()
+                    , bililiFilm.getPic()
+                    , bililiFilm.getTitle()
+                    , bililiFilm.getDescription());
+            startActivityGingerBread(view, intent);
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void startActivityLollipop(View view, Intent intent) {
+        intent.setClass(getActivity(), BIliBiliDetailActivity.class);
+
+
+    }
+
+    private void startActivityGingerBread(View view, Intent intent) {
+        int[] screenLocation = new int[2];
+        view.getLocationOnScreen(screenLocation);
+        intent.
+                      putExtra("left", screenLocation[0]).
+                      putExtra("top", screenLocation[1]).
+                      putExtra("width", view.getWidth()).
+                      putExtra("height", view.getHeight());
+
+        startActivity(intent);
+
+        // Override transitions: we don't want the normal window animation in addition to our
+        // custom one
+        getActivity().overridePendingTransition(0, 0);
+
+        // The detail activity handles the enter and exit animations. Both animations involve a
+        // ghost view animating into its final or initial position respectively. Since the detail
+        // activity starts translucent, the clicked view needs to be invisible in order for the
+        // animation to look correct.
+        ViewPropertyAnimator.animate(view).alpha(0.4f);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onChangeShowEvent(ChangeShow changeShow) {
+    public void onChangeShowEvent(ChangeShowEvent changeShow) {
         boolean isList = changeShow.isList();
         if (isList) {
             mRecyclerView.setLayoutManager(linearLayoutManager);

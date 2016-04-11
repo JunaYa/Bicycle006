@@ -72,6 +72,7 @@
 -dontwarn org.robolectric.**
 
 #For Retrofit
+-dontwarn rx.**
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
 -keepattributes Signature
@@ -98,3 +99,4 @@
     **[] $VALUES;
     public *;
 }
+

@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/listeners/AnimatorListener.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view/BottomShareDialogView.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view/BottomSheetDialogView.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view/BottomSheetShareDialogView.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/aya/bicycle006/ui/view/SpotlightView.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/anim" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/animator" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-nodpi" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-v21" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable-xxhdpi" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/animated_cpu.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/bg_card.9.png" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_ab_drawer.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_ab_up.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_done.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/ic_menu_file_download.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/vector_drawable_cpu.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/drawable/vector_drawable_cpu_ani.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout-v21" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_list_item.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_coordination_share_dialog_recycler_view.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_dialog.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_dialog_recycler_view.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/layout/bottom_sheet_share_dialog_recycler_view.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/card_photo.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/layout/view_toolbar_with_title_view.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values-night" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values-v21" charset="GBK" />
     <file url="file://$PROJECT_DIR$/app/src/main/res/values-v21/themes.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/app/src/main/res/values/attrs.xml" charset="GBK" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

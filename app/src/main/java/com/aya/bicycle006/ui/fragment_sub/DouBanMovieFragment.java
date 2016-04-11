@@ -16,8 +16,8 @@ import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.DouBanMovieAdapter;
 import com.aya.bicycle006.component.DouBanMovieRetrofit;
-import com.aya.bicycle006.events.ChangeShow;
-import com.aya.bicycle006.events.FabStatus;
+import com.aya.bicycle006.events.ChangeShowEvent;
+import com.aya.bicycle006.events.FabStatusEvent;
 import com.aya.bicycle006.model.D;
 import com.aya.bicycle006.ui.base_activity.BaseFragment;
 
@@ -114,11 +114,11 @@ public class DouBanMovieFragment extends BaseFragment implements SwipeRefreshLay
                     lastVisibleItem = RecyclerViewUtils.findMax(lastPositions);
                 }
                 if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
-                    EventBus.getDefault().post(new FabStatus(false));
+                    EventBus.getDefault().post(new FabStatusEvent(false));
                     controlsVisible = false;
                     scrolledDistance = 0;
                 } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
-                    EventBus.getDefault().post(new FabStatus(true));
+                    EventBus.getDefault().post(new FabStatusEvent(true));
                     controlsVisible = true;
                     scrolledDistance = 0;
                 }
@@ -169,7 +169,7 @@ public class DouBanMovieFragment extends BaseFragment implements SwipeRefreshLay
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onChangeShowEvent(ChangeShow changeShow) {
+    public void onChangeShowEvent(ChangeShowEvent changeShow) {
         boolean isList = changeShow.isList();
         if (isList) {
             mAdapter.setIsList(true);

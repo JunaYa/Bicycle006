@@ -19,10 +19,9 @@ import com.aya.bicycle006.App;
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
 import com.aya.bicycle006.adapter.NewsAdapter;
-import com.aya.bicycle006.component.NewsRetrofit;
 import com.aya.bicycle006.component.RetrofitSingleton;
-import com.aya.bicycle006.events.ChangeShow;
-import com.aya.bicycle006.events.FabStatus;
+import com.aya.bicycle006.events.ChangeShowEvent;
+import com.aya.bicycle006.events.FabStatusEvent;
 import com.aya.bicycle006.model.N;
 import com.aya.bicycle006.model.News;
 import com.aya.bicycle006.ui.base_activity.BaseFragment;
@@ -150,11 +149,11 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
                 }
 
                 if (scrolledDistance > HIDE_THRESHOLD && controlsVisible) {
-                    EventBus.getDefault().post(new FabStatus(false));
+                    EventBus.getDefault().post(new FabStatusEvent(false));
                     controlsVisible = false;
                     scrolledDistance = 0;
                 } else if (scrolledDistance < -HIDE_THRESHOLD && !controlsVisible) {
-                    EventBus.getDefault().post(new FabStatus(true));
+                    EventBus.getDefault().post(new FabStatusEvent(true));
                     controlsVisible = true;
                     scrolledDistance = 0;
                 }
@@ -251,7 +250,7 @@ public class NewsFragment extends BaseFragment implements SwipeRefreshLayout.OnR
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onChangeShowEvent(ChangeShow changeShow) {
+    public void onChangeShowEvent(ChangeShowEvent changeShow) {
         boolean isList = changeShow.isList();
         if (isList) {
             mRecyclerView.setLayoutManager(linearLayoutManager);
