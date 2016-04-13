@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.aya.bicycle006.R;
-import com.aya.bicycle006.Utils.ImageUrils;
+import com.aya.bicycle006.Utils.ImageUtils;
 
 
 public class SpotlightView extends View {
@@ -119,7 +119,7 @@ public class SpotlightView extends View {
                     mCallback.onSetupAnimation(SpotlightView.this);
                 }
 
-                ImageUrils.removeOnGlobalLayoutListenerCompat(SpotlightView.this, this);
+                ImageUtils.removeOnGlobalLayoutListenerCompat(SpotlightView.this, this);
             }
         });
     }

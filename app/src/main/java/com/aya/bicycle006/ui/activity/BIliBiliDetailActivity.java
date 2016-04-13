@@ -18,7 +18,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.aya.bicycle006.R;
-import com.aya.bicycle006.Utils.ImageUrils;
+import com.aya.bicycle006.Utils.ImageUtils;
 import com.aya.bicycle006.listeners.AnimatorListener;
 import com.aya.bicycle006.ui.base_activity.BaseActivity;
 import com.aya.bicycle006.ui.fragment_sub.MangaFragment;
@@ -105,8 +105,8 @@ public class BIliBiliDetailActivity extends BaseActivity {
     private Bitmap ImageViewToBitmap() {
         Glide.with(this).load(getIntent().getStringExtra(ARG_PIC)).into(hero);
         hero.buildDrawingCache(true);
-        Bitmap bitmap = hero.getDrawingCache();
-        return bitmap == null ? MangaFragment.bitmap : bitmap;
+        Bitmap bitmap1 = MangaFragment.bitmapSparseArray.get(1);
+        return bitmap1 == null ? setupPhoto(R.drawable.photo1) : MangaFragment.bitmapSparseArray.get(1);
     }
 
     @OnClick(R.id.back_btn)
@@ -115,7 +115,7 @@ public class BIliBiliDetailActivity extends BaseActivity {
     }
 
     private Bitmap setupPhoto(int resId) {
-        Bitmap bitmap = ImageUrils.decodeSampledBitmapFromResource(getResources(),
+        Bitmap bitmap = ImageUtils.decodeSampledBitmapFromResource(getResources(),
                 resId, 200, 200);
         hero.setImageBitmap(bitmap);
         return bitmap;
@@ -151,7 +151,7 @@ public class BIliBiliDetailActivity extends BaseActivity {
         pressed.getPaint().setColor(tintColor);
         bg.addState(new int[]{android.R.attr.state_pressed}, pressed);
         bg.addState(new int[]{}, normal);
-        ImageUrils.setBackgroundCompat(buttonView, bg);
+        ImageUtils.setBackgroundCompat(buttonView, bg);
     }
 
     public void setupEnterAnimation() {
@@ -164,7 +164,7 @@ public class BIliBiliDetailActivity extends BaseActivity {
                          spotlight.setMaskX(button.getRight() - (button.getWidth() / 2));
                          spotlight.setMaskY(button.getBottom() - (button.getHeight() / 2));
                          runEnterAnimation();
-                         ImageUrils.removeOnGlobalLayoutListenerCompat(spotlight, this);
+                         ImageUtils.removeOnGlobalLayoutListenerCompat(spotlight, this);
                      }
                  });
     }

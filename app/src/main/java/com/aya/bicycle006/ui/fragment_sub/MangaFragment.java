@@ -7,12 +7,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.DisplayMetrics;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 
 import com.aya.bicycle006.R;
 import com.aya.bicycle006.Utils.RecyclerViewUtils;
+import com.aya.bicycle006.Utils.Save;
 import com.aya.bicycle006.adapter.BILILIFilmAdapter;
 import com.aya.bicycle006.component.RetrofitSingleton;
 import com.aya.bicycle006.events.ChangeShowEvent;
@@ -41,13 +44,16 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Single on 2016/3/22.
  */
 public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener {
+    public static SparseArray<Bitmap> bitmapSparseArray = new SparseArray<>(1);
     private Observer<List<BILILIFilm>> mBILILIFilmObserver;
     private BILILIFilmAdapter mAdapter;
     private LinearLayoutManager linearLayoutManager;
@@ -57,7 +63,6 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
     @Bind(R.id.swipe_refresh) SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.recycler_view) RecyclerView mRecyclerView;
 
-    public static Bitmap bitmap;
     private View imgView;
 
     @Nullable
@@ -151,18 +156,18 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
                          ).subscribe(observer);
     }
 
-    private void onLoadData() {
-        RetrofitSingleton.getBRetrofitSingleton().getBililiService()
-                         .mBILILIFilmApi()
-                         .map(d -> d.getRank())
-                         .single(d1 -> d1.getCode() == 0)
-                         .subscribeOn(Schedulers.io())
-                         .observeOn(AndroidSchedulers.mainThread())
-                         .subscribe(list -> {
-                             mBILILIFilms.clear();
-                             mAdapter.setBiliList(mBILILIFilms);
-                         });
-    }
+//    private void onLoadData() {
+//        RetrofitSingleton.getBRetrofitSingleton().getBililiService()
+//                         .mBILILIFilmApi()
+//                         .map(d -> d.getRank())
+//                         .single(d1 -> d1.getCode() == 0)
+//                         .subscribeOn(Schedulers.io())
+//                         .observeOn(AndroidSchedulers.mainThread())
+//                         .subscribe(list -> {
+//                             mBILILIFilms.clear();
+//                             mAdapter.setBiliList(mBILILIFilms);
+//                         });
+//    }
 
     private OnBicycleImgClickListener mOnBicycleImgClickListener = (view, obj) ->
     {
@@ -176,16 +181,26 @@ public class MangaFragment extends BaseFragment implements SwipeRefreshLayout.On
 
         ImageView imageView = (ImageView) view;
         imageView.buildDrawingCache(false);
-        bitmap = Bitmap.createBitmap(imageView.getWidth(), imageView.getHeight(), (imageView
-                .getDrawingCache()).getConfig());
         if (obj instanceof BILILIFilm) {
             BILILIFilm bililiFilm = (BILILIFilm) obj;
+            onFetchBitmap(bililiFilm.getPic());
             Intent intent = BIliBiliDetailActivity.newBILIIntent(getActivity()
                     , bililiFilm.getPic()
                     , bililiFilm.getTitle()
                     , bililiFilm.getDescription());
             startActivityGingerBread(view, intent);
         }
+    }
+
+    private void onFetchBitmap(String url) {
+        Subscription subscription = Save.getBitmap(getActivity(), url)
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(bitmap1 -> {
+                                            bitmapSparseArray.put(1, bitmap1);
+                                        });
+
+        CompositeSubscription compositeSubscription = new CompositeSubscription();
+        compositeSubscription.add(subscription);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

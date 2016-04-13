@@ -1,5 +1,6 @@
 package com.aya.bicycle006.Utils;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,10 +10,12 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
+import rx.Observable;
+
 /**
  * Created by Single on 2016/3/29.
  */
-public class ImageUrils {
+public class ImageUtils {
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;
@@ -82,4 +85,6 @@ public class ImageUrils {
     public static boolean hasLollipop() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP;
     }
+
+
 }

@@ -2,11 +2,9 @@ package com.aya.bicycle006.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -88,14 +86,14 @@ public class ImageItemActivity extends BaseActivity {
                     .setMessage("保存到手机")
                     .setNegativeButton("取消", ((dialog, which) -> dialog.dismiss()))
                     .setPositiveButton("保存", ((dialog1, which1) -> {
-                        saveIamge();
+                        saveImage();
                         dialog1.dismiss();
                     })).show();
             return true;
         });
     }
 
-    private void saveIamge() {
+    private void saveImage() {
         Subscription subscription = Save.saveImage(this, mImageUrl, mImageTitle)
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe(uri -> {
@@ -104,10 +102,10 @@ public class ImageItemActivity extends BaseActivity {
                                             Log.d("save", "msg" + msg);
 //                                            Save.showNotificationSaveOK(uri,mContext);
                                         });
-        addSunscribe(subscription);
+        addSubscribe(subscription);
     }
 
-    private void addSunscribe(Subscription s) {
+    private void addSubscribe(Subscription s) {
         if (mCompositeSubscription == null) {
             mCompositeSubscription = new CompositeSubscription();
         }

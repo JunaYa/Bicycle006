@@ -77,13 +77,36 @@ public class Save {
         }).subscribeOn(Schedulers.io());
     }
 
+
+    public static Observable<Bitmap> getBitmap(Context context, String url) {
+        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
+            @Override
+            public void call(Subscriber<? super Bitmap> subscriber) {
+                Bitmap bitmap = null;
+                try {
+                    bitmap = Glide.with(context)
+                                  .load(url)
+                                  .asBitmap()
+                                  .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                  .get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+                subscriber.onNext(bitmap);
+                subscriber.onCompleted();
+            }
+        }).subscribeOn(Schedulers.io());
+    }
+
     public static void showNotificationSaveOK(@NonNull Uri file, Context context) {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.setDataAndType(file, "image/*");
 
         NotificationCompat.Builder mNotification = new NotificationCompat.Builder(context);
-
+        
         mNotification
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText("Image save. Click to preview")
